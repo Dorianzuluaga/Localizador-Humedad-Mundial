@@ -1,0 +1,56 @@
+.humidity-card {
+    display: flex;
+    align-items: center;
+    background-color: #0000008f;
+    border-radius: 16px;   
+    padding: 10px 10px;
+    color: #ece8e8;
+    font-family: sans-serif;
+    width: fit-content;
+    box-shadow: 0 10px 40px rgba(101, 97, 97, 0.465); 
+    position: relative;
+    bottom: 10px;
+    right: 10;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  
+}
+.coordinates {
+  display: flex;
+  flex-direction: column;
+  gap: 1px; 
+  margin: 2px;
+  padding: 0;
+}
+.coordinates p {
+  margin: 0; /* elimina márgenes por defecto */
+  line-height: 1.1; /* texto más compacto */
+}
+
+.humidity-card svg {
+  color: rgb(227, 224, 224)
+}
+
+
+.humidity-info .title {
+  font-size: 13px;
+  color: #e8e5e5;
+  margin: 0;
+  word-wrap: break- ; /* permite cortar palabras largas */
+  white-space: normal; /* permite salto de línea */
+  width: 200px; /* limita el ancho del texto */
+  line-height: 1.1; /* mejora el espaciado vertical */
+  text-align: center;
+  
+}
+
+
+@media (max-width: 600px) {
+  .humidity-card {
+    font-size: 14px;
+    padding: 10px;
+    bottom: 8px;
+    right: 5px;
+  }
+}
+

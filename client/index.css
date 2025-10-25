@@ -1,0 +1,47 @@
+#root {
+  margin: 0 auto;
+  text-align: center;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+
+body {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  font-family: system-ui, sans-serif;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* media querys para responsividad */
+
+@media (max-width: 768px) {
+  html, body, #root {
+    height: auto;
+  }
+  body {
+    font-size: 16px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 15px;
+    padding: 0;
+  }
+}

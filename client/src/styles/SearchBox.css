@@ -1,0 +1,74 @@
+.search-box {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+}
+
+/* Input con fondo suave */
+.search-box input {
+  width: 200px;
+  padding: 12px 12px;
+  border: none;
+  border-radius: 16px;
+  outline: none;
+  font-size: 14px;
+  background-color: rgba(114, 109, 109, 0.15); 
+  color: white;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 5px 25px rgba(101, 97, 97, 0.465);
+}
+
+/* Botón flotante */
+.search-box button {
+  background-color: #0e11414a;
+  border: none;
+  border-radius: 40%;
+  width:60px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fffefe;
+  font-size: 13px;
+  box-shadow: 0 5px 25px rgba(101, 97, 97, 0.465);
+  transition: background-color  0.6s ease;
+  opacity: 0.9;
+}
+
+/* Lista de sugerencias */
+.suggestions-list {
+  position: absolute;
+  top: 47px; /* debajo del input */
+  left: 40%;
+  transform: translateX(-50%);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: fit-content;
+  border-radius: 8px;
+  background-color: rgba(0,0,0,0.5);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestions-list li {
+  padding: 7px 12px;
+  cursor: pointer;
+  color: #ece8e8;
+}
+
+.suggestions-list li:hover,
+.suggestions-list li.active {
+  background-color: rgba(255,255,255,0.15);
+}
+
+.search-box input::placeholder {
+  color: #e9e7e7;
+  opacity: 0.7; /* un poquito translúcido */
+}
