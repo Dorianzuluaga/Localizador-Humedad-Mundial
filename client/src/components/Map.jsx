@@ -63,18 +63,6 @@ function Map() {
     }
   };
 
-  // aquí son los puntos de humedad creados manualmente
-  // const humidityPoints = useMemo(
-  //   () => [
-  //     { coordinates: [-3.71785, 40.42821], humidity: 92 },
-  //     { coordinates: [-2.9157, 43.2545], humidity: 20 },
-  //     { coordinates: [-1.5, 42.5], humidity: 50 },
-  //     { coordinates: [1.5, 41.0], humidity: 80 },
-  //     { coordinates: [0.5, 40.0], humidity: 30 },
-  //   ],
-  //   []
-  // );
-
   useEffect(() => {
     if (!mapRef.current) return;
 
