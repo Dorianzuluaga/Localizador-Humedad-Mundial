@@ -8,7 +8,7 @@ Este proyecto permite buscar la humedad aproximada de una ubicación, ya sea ing
 - **Backend:** Node.js + Express
 - **Base de datos:** MySQL
 - **Visualización:** Mapbox + D3
-- **Herramientas extra:** Nominatim, DBeaver, CesiumJS (futuro)
+- **Herramientas extra:** Nominatim, DBeaver, CesiumJS, OpenWeather
 
 ## Estructura del proyecto
 
