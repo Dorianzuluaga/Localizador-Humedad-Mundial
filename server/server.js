@@ -1,23 +1,23 @@
 const express = require("express");
-
-
 const app = express();
+
 app.use(express.json())
+
+const humidityRoutes = require("./routes/humidityRoutes");
+console.log("✅ Archivo de rutas importado correctamente");
+
+console.log("🛣 Registrando ruta /humidity");
+
+app.use("/humidity", humidityRoutes);
 
 app.get("/", (req, res) => {
     res.send("Server is running")
 });
 
-app.post("/humidity", (req, res) => {
-    const { lat, lng, date } = req.body;
-    console.log("Received data:", lat, lng, date);
-
-    res.json({ message: "Humidity data received", lat, lng, date });
-})
-
 
 const PORT = 3000;
 
 app.listen(PORT, () => {
-    console.log(`Server is running in port ${PORT}`)
+    console.log(`Server is running on port ${PORT}`)
 });
+console.log("🚀 Servidor listo para recibir peticiones POST /humidity");
