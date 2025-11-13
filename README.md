@@ -19,7 +19,7 @@ localizador-de-humedad-mundial/
 │   ├── src/
 │   └── ...
 │
-├── server/        # Backend (Node + Express)
+├── server/        # Backend (Node + Express + MySQL)
 │   ├── config/
 │   ├── controllers/
 │   ├── routes/
