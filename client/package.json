@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "npx serve -s dist"
+    "start": "serve -s dist -l $PORT"
   },
   "dependencies": {
     "@observablehq/plot": "^0.6.17",
