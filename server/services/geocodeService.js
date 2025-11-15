@@ -1,3 +1,5 @@
+const { searchByCountryAndRegion } = require('../models/geocodeModel');
+
 const getCoordinates = async (region, country) => {
     const dbResult = await searchByCountryAndRegion(region, country);
     if (dbResult) {
