@@ -1,18 +1,18 @@
-const pool = require('../db');
+const pool = require('../config/db');
 
 
-const searchByCountryAndRegion = async (region, country) => {
-    try {
-        const [rows] = await pool.query("SELECT lat, lng FROM geocodes WHERE region = ? AND country = ?", [region, country]);
-        if (rows.length > 0) {
-            return { lat: rows[0].lat, lng: rows[0].lng };
-        } else {
-            return null;
-        }
-    } catch (error) {
-        console.error("Error searching geocode in DB:", error);
-        return null;
-    }
+async function searchByCoordenates(lat, lng) {
+    const [rows] = await pool.query(
+        "SELECT * FROM locations WHERE lat = ? AND lng = ?",
+        [lat, lng]
+    ); return rows;
+
 }
 
-module.exports = { searchByCountryAndRegion };
+async function searchByName(region, country) {
+    const [rows] = await pool.query(
+        "SELECT * FROM locations WHERE region = ? AND country = ?",
+        [region, country]
+    ); return rows;
+}
+module.exports = { searchByCoordenates, searchByName };
