@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
@@ -9,11 +10,11 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-const weatherRoutes = require('./routes/weatherRoutes');
-app.use('/api/weather', weatherRoutes);
 
-const humidityRoutes = require('./routes/humidityRoutes');
-app.use('/api/humidity', humidityRoutes);
+app.use('/api/weather', require('./routes/weatherRoutes'));
+
+
+app.use('/api/humidity', require('./routes/humidityRoutes'));
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

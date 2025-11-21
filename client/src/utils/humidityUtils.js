@@ -1,6 +1,3 @@
-
-
-
 function getColorForHumidity(humidity) {
     if (humidity < 30) {
         return 'red'; // Baja humedad

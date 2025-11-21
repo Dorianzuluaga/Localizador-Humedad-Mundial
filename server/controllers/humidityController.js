@@ -1,27 +1,21 @@
-const geocodeService = require('../services/geocodeService');
+const humidityService = require('../services/humidityService');
 
 const getHumidityData = async (req, res) => {
     try {
+        console.log("BODY RECIBIDO:", req.body);
         const { lat, lng, date, region, country } = req.body;
         console.log("Received humidity data request:", { lat, lng, date, region, country });
 
         if (!lat && !region) {
             return res.status(400).json({ error: "Either 'lat' or 'region' must be provided." });
         }
-        let searchType = "";
-        if (lat && lng) searchType = "coordinates";
-        else searchType = "name";
-        console.log("tipology of search:", searchType);
 
-        let result = null; Ç
-        if (searchType === "coordinates") {
-            //fake data for demonstration
-            result = "humidity: 75, source: 'coordinates-based-data'";
+        const response = await humidityService.getHumidity(lat, lng, region, country);
+
+        if (response.error) {
+            return res.status(404).json({ response });
         }
-        if (searchType === "name") {
-            //fake data for demonstration
-            result = "humidity: 80, source: 'name-based-data'";
-        }
+
         return res.json({
             message: "consulted humidity data successfully",
             type: searchType,

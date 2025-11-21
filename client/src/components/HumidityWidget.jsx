@@ -4,7 +4,7 @@ import * as htl from "htl";
 
 // Widget para mostrar la humedad en formato de barra horizontal
 // Utiliza D3.js para crear un gráfico de barras con un gradiente de color
-// El gradiente va de púrpura a rojo y luego a dorado, representando
+// El gradiente va de púrpura a rojo y luego a dorado según el nivel de humedad
 function HumidityWidget({ humidity }) {
   const ref = useRef();
 

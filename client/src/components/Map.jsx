@@ -28,7 +28,7 @@ function Map() {
       else if (place_type?.includes("region")) zoom = 12;
       else if (place_type?.includes("country")) zoom = 5;
 
-      // 🚀 Animar vuelo al punto
+      // Animar vuelo al punto
       mapInstance.current.flyTo({
         center: [lon, lat],
         zoom,
@@ -37,7 +37,7 @@ function Map() {
         essential: true,
       });
 
-      // 📍 Agregar popup con el nombre del sitio
+      // Agregar popup con el nombre del sitio
       if (name) {
         new mapboxgl.Popup()
           .setLngLat([lon, lat])
@@ -45,7 +45,7 @@ function Map() {
           .addTo(mapInstance.current);
       }
 
-      // 🔥 (Opcional) Actualizar capa de calor según coordenadas buscadas
+      // (Opcional) Actualizar capa de calor según coordenadas buscadas
       if (mapInstance.current.getSource("humidity-points")) {
         const newFeature = {
           type: "Feature",
