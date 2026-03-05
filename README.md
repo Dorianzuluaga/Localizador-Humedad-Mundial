@@ -12,6 +12,7 @@ Este proyecto permite buscar la humedad aproximada de una ubicación, ya sea ing
 
 ## Estructura del proyecto
 
+```text
 localizador-de-humedad-mundial/
 │
 ├── client/ # Frontend (React + Vite)
@@ -25,8 +26,9 @@ localizador-de-humedad-mundial/
 │ ├── index.js
 │ └── ...
 │
-├── .env # Variables de entorno locales (no subir al repo)
-└── README.md # Este archivo
+├── .env
+└── README.md
+```
 
 ## Cómo ejecutar el proyecto
 
