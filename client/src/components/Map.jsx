@@ -8,8 +8,7 @@ import { setCoordinates } from "../store/coordinatesSlice";
 import { getInitialMapSettings } from "../utils/mapSettings";
 import SearchBox from "./SearchBox";
 
-mapboxgl.accessToken =
-  "pk.eyJ1IjoiZG9yaWFuenVsdWFnYSIsImEiOiJjbWN4bXhoN3UwMGdjMmxxbjljOWt5emR6In0.II_rIDIKtcoHV6kQRA8N2w";
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 function Map() {
   const dispatch = useDispatch();
