@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import getColorForHumidity from "../utils/humidityUtils";
@@ -15,20 +15,50 @@ function Map() {
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
+  const rotateAnimation = useRef(null);
+  const isRotating = useRef(true);
+
+  const startRotation = () => {
+    if (!mapInstance.current) return;
+
+    const rotateMap = () => {
+      if (!mapInstance.current || !isRotating.current) return;
+
+      const currentBearing = mapInstance.current.getBearing();
+
+      mapInstance.current.setBearing(currentBearing - 0.03);
+
+      rotateAnimation.current = requestAnimationFrame(rotateMap);
+    };
+
+    rotateMap();
+  };
+
+  const stopRotation = () => {
+    isRotating.current = false;
+    if (rotateAnimation.current) cancelAnimationFrame(rotateAnimation.current);
+  };
+
+  const resumeRotation = () => {
+    if (!mapInstance.current) return;
+
+    isRotating.current = true;
+    startRotation();
+  };
 
   const handleSearch = ({ lat, lon, place_type, name }) => {
     dispatch(setCoordinates({ lat, lng: lon, placeName: name || "" }));
 
     if (mapInstance.current) {
-      // 🗺️ Definir zoom según tipo de lugar
-      let zoom = 12; // default
+      stopRotation();
+
+      let zoom = 12;
       if (place_type?.includes("poi")) zoom = 16;
       else if (place_type?.includes("locality")) zoom = 14;
       else if (place_type?.includes("place")) zoom = 13;
       else if (place_type?.includes("region")) zoom = 12;
       else if (place_type?.includes("country")) zoom = 5;
 
-      // Animar vuelo al punto
       mapInstance.current.flyTo({
         center: [lon, lat],
         zoom,
@@ -37,7 +67,6 @@ function Map() {
         essential: true,
       });
 
-      // Agregar popup con el nombre del sitio
       if (name) {
         new mapboxgl.Popup()
           .setLngLat([lon, lat])
@@ -45,21 +74,7 @@ function Map() {
           .addTo(mapInstance.current);
       }
 
-      // (Opcional) Actualizar capa de calor según coordenadas buscadas
-      if (mapInstance.current.getSource("humidity-points")) {
-        const newFeature = {
-          type: "Feature",
-          geometry: { type: "Point", coordinates: [lon, lat] },
-          properties: {
-            humidity: Math.floor(Math.random() * 100), // valor temporal
-          },
-        };
-
-        mapInstance.current.getSource("humidity-points").setData({
-          type: "FeatureCollection",
-          features: [newFeature],
-        });
-      }
+      setTimeout(resumeRotation, 3000);
     }
   };
 
@@ -68,21 +83,21 @@ function Map() {
 
     const humidityGeoJSON = {
       type: "FeatureCollection",
-      features: [], // inicialmente vacío
+      features: [],
     };
 
     const map = new mapboxgl.Map({
       container: mapRef.current,
       style: "mapbox://styles/mapbox/standard-satellite",
       zoom: 1,
-      center: [-3.7, 40.4], //lon, lat
+      center: [-3.7, 40.4],
     });
 
     mapInstance.current = map;
 
-    // damos el estilo al mapa
     map.on("style.load", () => {
       const { zoom, curve, speed } = getInitialMapSettings();
+
       map.flyTo({
         center: [-3.7, 40.4],
         zoom,
@@ -90,11 +105,13 @@ function Map() {
         curve,
         easing: (t) => t,
       });
+
       map.addControl(new mapboxgl.NavigationControl(), "top-right");
+
       map.addControl(
         new mapboxgl.FullscreenControl({
           container: document.querySelector(".map-container"),
-        })
+        }),
       );
 
       map.addControl(new mapboxgl.ScaleControl(), "top-left");
@@ -144,45 +161,45 @@ function Map() {
 
       map.setFog({});
 
-      // map.on("click", (e) => {
-      //   const { lng, lat } = e.lngLat;
-      //   dispatch(setCoordinates({ lat: lat.toFixed(5), lng: lng.toFixed(5) }));
-      // });
+      startRotation();
 
       map.on("click", async (e) => {
+        stopRotation();
+
         const { lng, lat } = e.lngLat;
-        const latFixed = lat.toFixed(5);
-        const lngFixed = lng.toFixed(5);
-        const center = { lat: parseFloat(latFixed), lng: parseFloat(lngFixed) };
+        const latFixed = parseFloat(lat.toFixed(5));
+        const lngFixed = parseFloat(lng.toFixed(5));
 
         try {
-          const token =
-            "pk.eyJ1IjoiZG9yaWFuenVsdWFnYSIsImEiOiJjbWN4bXhoN3UwMGdjMmxxbjljOWt5emR6In0.II_rIDIKtcoHV6kQRA8N2w";
+          const token = mapboxgl.accessToken;
+
           const response = await fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${lngFixed},${latFixed}.json?access_token=${token}`
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${lngFixed},${latFixed}.json?access_token=${token}`,
           );
+
           const data = await response.json();
 
-          // Tomamos el nombre más relevante del primer resultado
           const placeName =
             data.features?.[0]?.place_name || "location not found";
 
-          // Guardamos en Redux
           dispatch(
             setCoordinates({
               lat: latFixed,
               lng: lngFixed,
               placeName,
-            })
+            }),
           );
 
-          // 🔹 Generamos puntos alrededor del clic (radio aproximado 10–20 km)
+          const center = { lat: latFixed, lng: lngFixed };
+
           const newHumidityData = {
             type: "FeatureCollection",
             features: Array.from({ length: 25 }, () => {
-              const offsetLat = (Math.random() - 0.5) * 0.2; // ±0.1°
+              const offsetLat = (Math.random() - 0.5) * 0.2;
               const offsetLng = (Math.random() - 0.5) * 0.2;
-              const randomHumidity = Math.floor(Math.random() * 100);
+
+              const humidity = Math.floor(Math.random() * 100);
+
               return {
                 type: "Feature",
                 geometry: {
@@ -190,55 +207,36 @@ function Map() {
                   coordinates: [center.lng + offsetLng, center.lat + offsetLat],
                 },
                 properties: {
-                  humidity: randomHumidity,
-                  color: getColorForHumidity(randomHumidity),
+                  humidity,
+                  color: getColorForHumidity(humidity),
                 },
               };
             }),
           };
 
-          // 🔹 Actualizamos la fuente del heatmap
           const source = map.getSource("humidity-points");
-          if (source) {
-            source.setData(newHumidityData);
-          } else {
-            console.warn(
-              "La fuente 'humidity-points' no está disponible todavía."
-            );
-          }
 
-          // 🔹 Añadimos el popup
+          if (source) source.setData(newHumidityData);
+
           new mapboxgl.Popup()
             .setLngLat([lng, lat])
             .setHTML(`<strong>${placeName}</strong>`)
             .addTo(map);
+
+          setTimeout(resumeRotation, 3000);
         } catch (error) {
           console.error("Error obteniendo el nombre del sitio:", error);
         }
       });
 
-      // new mapboxgl.Marker().setLngLat([-3.71785, 40.42821]).addTo(map); //lon,lat
-
-      // new mapboxgl.Marker({ color: "black" })
-      //   .setLngLat([-2.9157, 43.2545]) //lon,lat
-      //   .addTo(map);
-
-      // con bound lo que hago es centrar el mapa en las coordenadas y
-      // para que los marcadores no se me pierdan de vista, para esto tambien tuve que importar css de mapbox
-      // const bounds = new mapboxgl.LngLatBounds();
-
-      // bounds.extend([-3.71785, 40.42821]); //lon,lat
-      // bounds.extend([-2.9157, 43.2545]); //lon,lat
-      // map.fitBounds(bounds, { padding: 50, maxZoom: 1.8 });
-
       const handleResize = () => map.resize();
+
       window.addEventListener("resize", handleResize);
 
-      setTimeout(() => {
-        map.resize();
-      }, 200);
+      setTimeout(() => map.resize(), 200);
 
       return () => {
+        cancelAnimationFrame(rotateAnimation.current);
         map.remove();
         window.removeEventListener("resize", handleResize);
       };
@@ -248,9 +246,8 @@ function Map() {
   return (
     <div className="map-container">
       <div ref={mapRef} className="mapita"></div>
-      <div>
-        <SearchBox onSearch={handleSearch} />
-      </div>
+
+      <SearchBox onSearch={handleSearch} />
 
       <div className="widget-container">
         <WidgetCircular />

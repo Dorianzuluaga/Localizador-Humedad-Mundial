@@ -1,10 +1,11 @@
 const humidityService = require('../services/humidityService');
 
 const getHumidityData = async (req, res) => {
+    console.log(req.body);
     try {
         console.log("BODY RECIBIDO:", req.body);
-        const { lat, lng, date, region, country } = req.body;
-        console.log("Received humidity data request:", { lat, lng, date, region, country });
+        const { lat, lng, region, country } = req.body;
+        console.log("Received humidity data request:", { lat, lng, region, country });
 
         if (!lat && !region) {
             return res.status(400).json({ error: "Either 'lat' or 'region' must be provided." });
@@ -18,8 +19,7 @@ const getHumidityData = async (req, res) => {
 
         return res.json({
             message: "consulted humidity data successfully",
-            type: searchType,
-            data: { lat, lng, date, region, country }
+            data: response,
         })
 
     } catch (error) {

@@ -12,14 +12,18 @@ function WidgetCircular() {
 
   useEffect(() => {
     const fetchHumidity = async () => {
-      if (coordinates.lat && coordinates.lng) {
+      if (
+        typeof coordinates.lat === "number" &&
+        typeof coordinates.lng === "number"
+      ) {
         try {
           const data = await getWeatherByCoordinates(
             coordinates.lat,
-            coordinates.lng
+            coordinates.lng,
           );
-          if (data && data.humidity !== undefined) {
-            setHumidityPercent(data.humidity);
+          const { humidity } = data.data;
+          if (humidity !== undefined) {
+            setHumidityPercent(humidity);
           } else {
             setHumidityPercent(0);
           }

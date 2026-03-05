@@ -1,10 +1,12 @@
 const axios = require("axios");
 
 // consultamos la humedad actual para unas coordenadas dadas
-async function fetchWeather(lat, lon) {
+async function fetchWeather(lat, lng) {
     try {
         const apiKey = process.env.OPENWEATHER_API_KEY;
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${apiKey}&units=metric`;
+        console.log("Weather API URL:", url);
+
         const response = await axios.get(url);
 
 
