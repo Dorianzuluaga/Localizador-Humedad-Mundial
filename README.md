@@ -1,12 +1,12 @@
 # Localizador de Humedad Mundial
 
-Este proyecto permite buscar la humedad aproximada de una ubicación, ya sea ingresando coordenadas (latitud y longitud) o el nombre de una región (ciudad, municipio, etc.). Los resultados se almacenan en una base de datos para su posterior análisis o visualización.
+Este proyecto permite buscar la humedad aproximada de una ubicación, ya sea ingresando coordenadas (latitud y longitud) o el nombre de una región (ciudad, municipio, etc.). Los resultados se almacenan en una base de datos PostgreSQL para su posterior análisis o visualización.
 
 ## Tecnologías usadas
 
 - **Frontend:** React + TypeScript + Vite
 - **Backend:** Node.js + Express
-- **Base de datos:** MySQL
+- **Base de datos:** PostgreSQL
 - **Visualización:** Mapbox + D3
 - **Herramientas extra:** Nominatim, DBeaver, CesiumJS, OpenWeather
 
@@ -19,7 +19,7 @@ localizador-de-humedad-mundial/
 │ ├── src/
 │ └── ...
 │
-├── server/ # Backend (Node + Express + MySQL)
+├── server/ # Backend (Node + Express + PostgreSQL)
 │ ├── config/
 │ ├── controllers/
 │ ├── routes/
@@ -51,29 +51,54 @@ cd Localizador-Humedad-Mundial
 
 ### 3. Crear la base de datos en MySQL
 
-Asegúrate de tener MySQL en ejecución. Luego crea una base de datos llamada `localizador` y la siguiente tabla:
+Asegúrate de tener PostgreSQL en ejecución. Luego crea una base de datos llamada humidity_db y las siguientes tablas:
 
-CREATE DATABASE localizador;
+CREATE DATABASE humidity_db;
 
-USE localizador;
+\c humidity_db;
 
-CREATE TABLE busquedas (
-id INT AUTO_INCREMENT PRIMARY KEY,
-lat VARCHAR(255),
-lon VARCHAR(255),
-date DATE,
-humidity INT,
-location VARCHAR(255)
+CREATE TABLE locations (
+id SERIAL PRIMARY KEY,
+region VARCHAR(255),
+country VARCHAR(255),
+lat FLOAT,
+lng FLOAT,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-⚙️ El archivo `server/config/db.js` ya está configurado para conectarse a `localhost` con usuario `root` sin contraseña.
+CREATE TABLE busquedas (
+id SERIAL PRIMARY KEY,
+lat FLOAT,
+lon FLOAT,
+date DATE,
+humidity INT,
+location VARCHAR(255),
+region VARCHAR(255),
+country VARCHAR(255),
+lng FLOAT,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-### 4. Ejecutar el proyecto
+⚙️ El archivo `server/config/db.js` ya está configurado para conectarse a `localhost` con usuario `PostgreSQl`
+
+### 4. Configurar el .env
+
+Ejemplo de variables necesarias:
+
+PORT=3000
+DB_HOST=localhost
+DB_USER=tu_usuario
+DB_PASSWORD=tu_contraseña
+DB_NAME=humidity_db
+DB_PORT=5432
+OPENWEATHER_API_KEY=tu_api_key
+
+### 5. Ejecutar el proyecto
 
 - Inicia el backend:
 
   cd server
-  node index.js
+  npm run dev
 
 - Inicia el frontend:
 
@@ -81,15 +106,3 @@ location VARCHAR(255)
   npm run dev
 
 Abre tu navegador en `http://localhost:5173` para ver la aplicación.
-
----
-
-### Asegúrate de que MySQL esté corriendo
-
-Si usas macOS con Homebrew, puedes iniciar MySQL con:
-
-mysql.server start
-
-También puedes verificar si está activo con:
-
-mysqladmin -u root status
