@@ -23,7 +23,7 @@ pool.query('SELECT NOW()')
     .catch(err => console.error('Error conexión PostgreSQL:', err));
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
 
 module.exports = app;
