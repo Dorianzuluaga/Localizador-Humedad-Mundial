@@ -2,7 +2,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const getHumidityByCoordinates = async (lat, lng, date) => {
 
     try {
-        const response = await fetch(`${API_BASE_URL}/humidity`, {
+        const response = await fetch(`${API_BASE_URL}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
