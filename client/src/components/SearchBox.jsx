@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/SearchBox.css";
 
-const MAPBOX_TOKEN =
-  "pk.eyJ1IjoiZG9yaWFuenVsdWFnYSIsImEiOiJjbWN4bXhoN3UwMGdjMmxxbjljOWt5emR6In0.II_rIDIKtcoHV6kQRA8N2w"; // ya lo tienes en tu .env
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const SearchBox = ({ onSearch }) => {
   const [query, setQuery] = useState("");
@@ -29,8 +28,8 @@ const SearchBox = ({ onSearch }) => {
       // Autocomplete Mapbox
       fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          query
-        )}.json?autocomplete=true&limit=5&access_token=${MAPBOX_TOKEN}`
+          query,
+        )}.json?autocomplete=true&limit=5&access_token=${MAPBOX_TOKEN}`,
       )
         .then((res) => res.json())
         .then((data) => {
@@ -66,7 +65,7 @@ const SearchBox = ({ onSearch }) => {
 
       try {
         const res = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${lon},${lat}.json?access_token=${MAPBOX_TOKEN}`
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${lon},${lat}.json?access_token=${MAPBOX_TOKEN}`,
         );
         const data = await res.json();
 
@@ -90,8 +89,8 @@ const SearchBox = ({ onSearch }) => {
       // 👉 Si el usuario busca por nombre
       const res = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          query
-        )}.json?limit=1&access_token=${MAPBOX_TOKEN}`
+          query,
+        )}.json?limit=1&access_token=${MAPBOX_TOKEN}`,
       );
       const data = await res.json();
       if (data.features && data.features.length > 0) {
@@ -120,7 +119,7 @@ const SearchBox = ({ onSearch }) => {
         onKeyDown={(e) => {
           if (e.key === "ArrowDown") {
             setActiveIndex((prev) =>
-              Math.min(prev + 1, suggestions.length - 1)
+              Math.min(prev + 1, suggestions.length - 1),
             );
           } else if (e.key === "ArrowUp") {
             setActiveIndex((prev) => Math.max(prev - 1, 0));
