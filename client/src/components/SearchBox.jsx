@@ -24,8 +24,11 @@ const SearchBox = ({ onSearch }) => {
     const isCoords =
       coords.length === 2 && !isNaN(coords[0]) && !isNaN(coords[1]);
 
-    if (!isCoords) {
-      // Autocomplete Mapbox
+    if (isCoords) {
+      setSuggestions([]);
+      return;
+    }
+    const timeout = setTimeout(() => {
       fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
           query,
@@ -35,9 +38,8 @@ const SearchBox = ({ onSearch }) => {
         .then((data) => {
           setSuggestions(data.features || []);
         });
-    } else {
-      setSuggestions([]);
-    }
+    }, 100);
+    return () => clearTimeout(timeout); // debounce 1 seg
   }, [query]);
 
   const handleSelect = (item) => {
