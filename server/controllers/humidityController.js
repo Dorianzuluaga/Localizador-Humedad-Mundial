@@ -7,7 +7,7 @@ const getHumidityData = async (req, res) => {
         const { lat, lng, region, country } = req.body;
         console.log("Received humidity data request:", { lat, lng, region, country });
 
-        if (!lat && !region) {
+        if (!lat && !lng && !region) {
             return res.status(400).json({ error: "Either 'lat' or 'region' must be provided." });
         }
 

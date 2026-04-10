@@ -6,26 +6,28 @@ async function getHumidity(lat, lng, region, country) {
     try {
         console.log("Fetching humidity with params:", { lat, lng, region, country });
 
-        const coords = await geocodeService.getCoordinates(region, country, lat, lng);
-        lat = coords.lat;
-        lng = coords.lng;
+        if (!lat || !lng) {
+            const coords = await geocodeService.getCoordinates(region, country);
+            lat = coords.lat;
+            lng = coords.lng;
+        }
 
-        if (!lat && !lng) {
+        if (!lat || !lng) {
             return { error: "Coordinates not found for this search" };
         }
 
         const weather = await weatherService.fetchWeather(lat, lng);
         console.log("Weather response:", weather);
 
-        await searchModel.saveSearch({
-            lat,
-            lng,
-            date: new Date(),
-            humidity: weather.humidity,
-            location: weather.name,
-            region,
-            country
-        });
+        // await searchModel.saveSearch({
+        //     lat,
+        //     lng,
+        //     date: new Date(),
+        //     humidity: weather.humidity,
+        //     location: weather.name,
+        //     region,
+        //     country
+        // });
 
         return {
             lat,
